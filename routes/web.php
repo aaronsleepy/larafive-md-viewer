@@ -15,7 +15,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('docs/{file?}', function ($file = null) {
-    $text = (new \App\Models\MarkDownDoc\Documentation())->get($file);
-    return markdown($text);
-});
+Route::get('docs/{file?}', 'DocsController@show');
