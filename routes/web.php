@@ -17,5 +17,5 @@ Route::get('/', function () {
 
 Route::get('docs/{file?}', function ($file = null) {
     $text = (new \App\Models\MarkDownDoc\Documentation())->get($file);
-    return app(ParsedownExtra::class)->text($text);
+    return markdown($text);
 });
