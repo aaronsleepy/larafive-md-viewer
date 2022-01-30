@@ -3,6 +3,7 @@
 namespace App\Models\MarkDownDoc;
 
 use Illuminate\Support\Facades\File;
+use Intervention\Image\Facades\Image;
 
 class Documentation
 {
@@ -13,6 +14,8 @@ class Documentation
      */
     private const FILE_EXTENSION = '.md';
 
+    private const IMAGE_FILE_EXTENSION = '.png';
+
     /**
      * 마크다운 파일을 읽어서 본문을 리턴한다.
      *
@@ -21,8 +24,19 @@ class Documentation
      */
     public function get(string $file = 'documentation.md') : string
     {
-        $content = File::get($this->path($file));
+        $content = File::get($this->path('docs', $file, self::FILE_EXTENSION));
         return $this->replaceLinks($content);
+    }
+
+    /**
+     * 이미지 파일을 읽어서 리턴한다.
+     *
+     * @param string $file
+     * @return \Intervention\Image\Image
+     */
+    public function image(string $file): \Intervention\Image\Image
+    {
+        return Image::make($this->path('docs/images', $file, self::IMAGE_FILE_EXTENSION));
     }
 
     /**
@@ -31,10 +45,10 @@ class Documentation
      * @param string $file
      * @return string
      */
-    private function path(string $file): string
+    private function path(string $dir, string $file, string $fileExtension): string
     {
-        $file = ends_with($file, Documentation::FILE_EXTENSION) ? $file : $file . Documentation::FILE_EXTENSION;
-        $path = base_path('docs' . DIRECTORY_SEPARATOR . $file);
+        $file = ends_with($file, $fileExtension) ? $file : $file . $fileExtension;
+        $path = base_path($dir . DIRECTORY_SEPARATOR . $file);
 
         if (! File::exists($path)) {
             abort(404, "Requested ${file} does not exists!");
