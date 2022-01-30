@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\MarkDownDoc\Documentation;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
 class DocsController extends Controller
@@ -27,8 +28,12 @@ class DocsController extends Controller
      */
     public function show(string $file = 'installation.md'): array
     {
-        $index = markdown($this->documentation->get());
-        $content = markdown($this->documentation->get($file));
+        $index = Cache::remember('docs.index', 120, function () {
+            return markdown($this->documentation->get());
+        });
+        $content = Cache::remember("docs.{$file}", 120, function () use ($file) {
+            return markdown($this->documentation->get($file));
+        });
         return compact('index', 'content');
     }
 
@@ -40,8 +45,12 @@ class DocsController extends Controller
      */
     public function showView(string $file = 'installation.md')
     {
-        $index = markdown($this->documentation->get());
-        $content = markdown($this->documentation->get($file));
+        $index = Cache::remember('docs.index', 120, function () {
+            return markdown($this->documentation->get());
+        });
+        $content = Cache::remember("docs.{$file}", 120, function () use ($file) {
+            return markdown($this->documentation->get($file));
+        });
         return view('docs.show', compact('index', 'content'));
     }
 }
