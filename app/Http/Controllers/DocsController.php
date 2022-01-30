@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\MarkDownDoc\Documentation;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Foundation\Application;
+use Illuminate\View\View;
 
 class DocsController extends Controller
 {
@@ -24,10 +27,21 @@ class DocsController extends Controller
      */
     public function show(string $file = 'installation.md'): array
     {
-        $index = markdown($this->documentation->get($file));
+        $index = markdown($this->documentation->get());
         $content = markdown($this->documentation->get($file));
         return compact('index', 'content');
     }
 
-
+    /**
+     * 마크다운 파일 뷰를 리턴한다
+     *
+     * @param string $file
+     * @return Factory|Application|View
+     */
+    public function showView(string $file = 'installation.md')
+    {
+        $index = markdown($this->documentation->get());
+        $content = markdown($this->documentation->get($file));
+        return view('docs.show', compact('index', 'content'));
+    }
 }
