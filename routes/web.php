@@ -16,3 +16,5 @@ Route::get('/', function () {
 });
 
 Route::get('docs/{file?}', 'DocsController@showView');
+
+Route::get('docs/images/{image}', 'DocsController@image');

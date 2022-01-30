@@ -7,6 +7,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 class DocsController extends Controller
 {
@@ -52,5 +53,15 @@ class DocsController extends Controller
             return markdown($this->documentation->get($file));
         });
         return view('docs.show', compact('index', 'content'));
+    }
+
+    public function image(String $file)
+    {
+        (new ConsoleOutput())->writeln("$file");
+        $image = $this->documentation->image($file);
+
+        return response($image->encode('png'), 200, [
+           'Content-Type' => 'image/png'
+        ]);
     }
 }
