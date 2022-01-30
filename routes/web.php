@@ -15,4 +15,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('docs/{file?}', 'DocsController@show');
+Route::get('docs/{file?}', 'DocsController@showView');
